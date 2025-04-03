@@ -12,7 +12,7 @@ import java.util.List;
 public interface UserService {
 
 
-    List<UserResponse> findAll();
+    List<UserResponse> findAll(String keyword, String sort, int page, int size);
 
     UserResponse findById(Long id);
 

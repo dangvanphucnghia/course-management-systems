@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import vn.phucnghia.course_management_systems.common.Gender;
 import vn.phucnghia.course_management_systems.controller.request.UserChangPasswordRequest;
 import vn.phucnghia.course_management_systems.controller.request.UserCreationRequest;
 import vn.phucnghia.course_management_systems.controller.request.UserUpdateRequest;
@@ -30,7 +31,7 @@ public class MockupUserController {
         userResponse1.setFirstName("admin1");
         userResponse1.setLastName("system1");
         userResponse1.setUsername("admin1");
-        userResponse1.setGender("gender1");
+        userResponse1.setGender(Gender.MALE);
         userResponse1.setBirthday(new Date());
         userResponse1.setPhone("0368285760");
         userResponse1.setEmail("admin1@gmail.com");
@@ -41,7 +42,7 @@ public class MockupUserController {
         userResponse2.setFirstName("admin2");
         userResponse2.setLastName("system2");
         userResponse2.setUsername("admin2");
-        userResponse2.setGender("gender2");
+        userResponse2.setGender(Gender.MALE);
         userResponse2.setBirthday(new Date());
         userResponse2.setPhone("0368285761");
         userResponse2.setEmail("admin2@gmail.com");
@@ -65,7 +66,7 @@ public class MockupUserController {
         userResponse1.setFirstName("admin1");
         userResponse1.setLastName("system1");
         userResponse1.setUsername("admin1");
-        userResponse1.setGender("gender1");
+        userResponse1.setGender(Gender.MALE);
         userResponse1.setBirthday(new Date());
         userResponse1.setPhone("0368285760");
         userResponse1.setEmail("admin1@gmail.com");

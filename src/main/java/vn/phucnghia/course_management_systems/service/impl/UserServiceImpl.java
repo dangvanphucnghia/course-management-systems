@@ -4,10 +4,14 @@ package vn.phucnghia.course_management_systems.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import vn.phucnghia.course_management_systems.config.AppConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import vn.phucnghia.course_management_systems.common.UserStatus;
 import vn.phucnghia.course_management_systems.controller.request.UserCreationRequest;
 import vn.phucnghia.course_management_systems.controller.response.UserResponse;
@@ -23,6 +27,8 @@ import vn.phucnghia.course_management_systems.controller.request.UserUpdateReque
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j(topic = "USER-SERVICE")
@@ -35,13 +41,58 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public List<UserResponse> findAll() {
-        return List.of();
+    public List<UserResponse> findAll(String keyword, String sort, int page, int size) {
+        if(StringUtils.hasLength(keyword)){
+            //goi search method
+        }
+
+        //sorting
+        Sort.Order order = new Sort.Order(Sort.Direction.ASC,"id");
+        if(StringUtils.hasLength(sort)){
+            Pattern pattern = Pattern.compile("(\\w+?)(:)(.*)"); //tencot:asc|desc
+            Matcher matcher = pattern.matcher(sort);
+            if (matcher.find()){
+                String columnName = matcher.group(1);
+                if(matcher.group(3).equalsIgnoreCase("asc")){
+                    order = new Sort.Order(Sort.Direction.ASC, columnName);
+                }else{
+                    order = new Sort.Order(Sort.Direction.DESC, columnName);
+                }
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page, size,Sort.by(order));
+        Page<UserEntity> userEntities = userRepository.findAll(pageable);
+
+//        List<UserResponse> userList =
+        return userEntities.stream().map(entity->UserResponse.builder()
+                        .id(entity.getId())
+                        .firstName(entity.getFirstName())
+                        .lastName(entity.getLastName())
+                        .gender(entity.getGender())
+                        .birthday(entity.getBirthday())
+                        .username(entity.getUsername())
+                        .phone(entity.getPhone())
+                        .email(entity.getEmail())
+                        .build())
+                .toList();
     }
 
     @Override
     public UserResponse findById(Long id) {
-        return null;
+        log.info("Find user by id: {}", id);
+        UserEntity userEntity = getUserEntity(id);
+
+        return UserResponse.builder()
+                .id(id)
+                .firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName())
+                .gender(userEntity.getGender())
+                .birthday(userEntity.getBirthday())
+                .username(userEntity.getUsername())
+                .phone(userEntity.getPhone())
+                .email(userEntity.getEmail())
+                .build();
     }
 
     @Override

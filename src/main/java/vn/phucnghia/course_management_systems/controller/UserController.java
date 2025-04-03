@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.phucnghia.course_management_systems.common.Gender;
 import vn.phucnghia.course_management_systems.controller.request.UserChangPasswordRequest;
 import vn.phucnghia.course_management_systems.controller.request.UserCreationRequest;
 import vn.phucnghia.course_management_systems.controller.request.UserUpdateRequest;
@@ -27,16 +28,18 @@ public class UserController {
     @Operation(summary = "Get user list", description = "API retrieve user from db")
     @GetMapping("/list")
     public Map<String, Object> getList(@RequestParam(required = false) String keywword,
+                                       @RequestParam(required = false) String sort,
                                        @RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "20") int size){
-
+        log.info("Get list user");
+        userService.findAll(keywword,sort ,page ,size );
         UserResponse userResponse1 = new UserResponse();
 
         userResponse1.setId(1l);
         userResponse1.setFirstName("admin1");
         userResponse1.setLastName("system1");
         userResponse1.setUsername("admin1");
-        userResponse1.setGender("gender1");
+        userResponse1.setGender(Gender.MALE);
         userResponse1.setBirthday(new Date());
         userResponse1.setPhone("0368285760");
         userResponse1.setEmail("admin1@gmail.com");
@@ -47,7 +50,7 @@ public class UserController {
         userResponse2.setFirstName("admin2");
         userResponse2.setLastName("system2");
         userResponse2.setUsername("admin2");
-        userResponse2.setGender("gender2");
+        userResponse2.setGender(Gender.MALE);
         userResponse2.setBirthday(new Date());
         userResponse2.setPhone("0368285761");
         userResponse2.setEmail("admin2@gmail.com");
@@ -66,28 +69,21 @@ public class UserController {
     @GetMapping("/{userId}")
     public Map<String, Object> getUserDetail(@PathVariable Long userId){
 
-        UserResponse userResponse1 = new UserResponse();
-        userResponse1.setId(userId);
-        userResponse1.setFirstName("admin1");
-        userResponse1.setLastName("system1");
-        userResponse1.setUsername("admin1");
-        userResponse1.setGender("gender1");
-        userResponse1.setBirthday(new Date());
-        userResponse1.setPhone("0368285760");
-        userResponse1.setEmail("admin1@gmail.com");
+        log.info("Get user detail by id: {}", userId);
 
-        List<UserResponse> userlink = List.of(userResponse1);
+        UserResponse userResponse = userService.findById(userId);
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.OK.value());
         result.put("message", "User Detail Id");
-        result.put("data",userlink);
+        result.put("data",userResponse);
         return result;
     }
 
     @Operation(summary="Created User", description = "API add new User to do")
     @PostMapping("/add")
     public ResponseEntity<Object> createdUser(@RequestBody UserCreationRequest request){
+        log.info("Create user: {}", request);
         Map<String, Object> result = new LinkedHashMap<>();
 
         result.put("status", HttpStatus.ACCEPTED.value());
