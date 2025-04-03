@@ -115,6 +115,9 @@ public class UserController {
     @Operation(summary = "Chang Password User", description = "API Chang Password User")
     @PatchMapping("/changpasswod")
     public Map<String, Object> changPasswordUser(@RequestBody UserChangPasswordRequest request){
+        log.info("Changing password for user: {}", request);
+
+        userService.changePassword(request);
         Map<String, Object> result = new LinkedHashMap<>();
 
         result.put("status", HttpStatus.NO_CONTENT.value());

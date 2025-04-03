@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 public class UserChangPasswordRequest {
     private Long id;
-    private String oldpassword;
-    private String newpassword;
+    private String password;
+    private String confirmPassword;
 }

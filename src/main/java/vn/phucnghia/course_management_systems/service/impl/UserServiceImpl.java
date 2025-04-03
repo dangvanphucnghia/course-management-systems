@@ -3,6 +3,9 @@ package vn.phucnghia.course_management_systems.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import vn.phucnghia.course_management_systems.config.AppConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.phucnghia.course_management_systems.common.UserStatus;
@@ -29,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserResponse> findAll() {
@@ -136,7 +140,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(UserChangPasswordRequest req) {
+        log.info("Changing password for user: {}",req);
 
+        UserEntity user = getUserEntity(req.getId());
+        if(req.getPassword().equals(req.getConfirmPassword())){
+            user.setPassword(passwordEncoder.encode(req.getPassword()));
+        }
+        userRepository.save(user);
+        log.info("Changed password for user: {}",req);
     }
 
     @Override
