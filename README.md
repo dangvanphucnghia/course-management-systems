@@ -17,4 +17,5 @@ Docker <br>
 Docker compose <br>
 … <br>
 ## Truy cập Backend service để test các API
-![image](https://github.com/user-attachments/assets/9cd44a92-7b78-4e4b-ad76-9f8b3c934b41)
+![image](https://github.com/user-attachments/assets/f1a5f48c-60cc-46c4-abdd-8127fd3e8023)
+
