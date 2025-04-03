@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.phucnghia.course_management_systems.common.UserStatus;
 import vn.phucnghia.course_management_systems.controller.request.UserCreationRequest;
 import vn.phucnghia.course_management_systems.controller.response.UserResponse;
+import vn.phucnghia.course_management_systems.exception.ResourceNotFoundException;
 import vn.phucnghia.course_management_systems.model.AddressEntity;
 import vn.phucnghia.course_management_systems.model.UserEntity;
 import vn.phucnghia.course_management_systems.repository.AddressRepository;
@@ -90,7 +91,46 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void update(UserUpdateRequest req) {
+        log.info("Updating user: {}", req);
+
+        UserEntity user = getUserEntity(req.getId());
+        user.setFirstName(req.getFirstName());
+        user.setLastName(req.getLastName());
+        user.setGender(req.getGender());
+        user.setBirthday(req.getBirthday());
+        user.setEmail(req.getEmail());
+        user.setPhone(req.getPhone());
+        user.setUsername(req.getUsername());
+        userRepository.save(user);
+        log.info("Updated user: {}", req);
+
+        List<AddressEntity> addresses = new ArrayList<>();
+
+        req.getAddresses().forEach(address->{
+            AddressEntity addressEntity = addressRepository.findByUserIdAndAddressType(user.getId(), address.getAddressType());
+            if(addressEntity == null)
+            {
+                addressEntity = new AddressEntity();
+            }
+
+            addressEntity.setApartmentNumber(address.getApartmentNumber());
+            addressEntity.setFloor(address.getFloor());
+            addressEntity.setBuilding(address.getBuilding());
+            addressEntity.setStreetNumber(address.getStreetNumber());
+            addressEntity.setStreet(address.getStreet());
+            addressEntity.setCity(address.getCity());
+            addressEntity.setCountry(address.getCountry());
+            addressEntity.setAddressType(address.getAddressType());
+            addressEntity.setUserId(user.getId());
+
+            addresses.add(addressEntity);
+            log.info("Updated addresses: {}", addresses);
+
+        });
+
+        addressRepository.saveAll(addresses);
 
     }
 
@@ -102,5 +142,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
 
+    }
+
+    private UserEntity getUserEntity(Long id){
+        return userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found"));
     }
 }

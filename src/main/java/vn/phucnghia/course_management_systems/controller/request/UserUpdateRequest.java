@@ -6,6 +6,7 @@ import vn.phucnghia.course_management_systems.common.Gender;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,4 +19,5 @@ public class UserUpdateRequest implements Serializable {
     private Date birthday;
     private String phone;
     private String email;
+    private List<AddressRequest> addresses;
 }

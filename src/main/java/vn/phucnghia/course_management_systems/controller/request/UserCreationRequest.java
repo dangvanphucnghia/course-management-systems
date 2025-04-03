@@ -2,6 +2,7 @@ package vn.phucnghia.course_management_systems.controller.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import vn.phucnghia.course_management_systems.common.Gender;
 import vn.phucnghia.course_management_systems.common.UserType;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class UserCreationRequest implements Serializable {
     private Long id;
     private String firstName;

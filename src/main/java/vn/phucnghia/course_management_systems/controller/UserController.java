@@ -3,6 +3,7 @@ package vn.phucnghia.course_management_systems.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.*;
 @RequestMapping("/user")
 @Tag(name=" User Controller")
 @RequiredArgsConstructor
+@Slf4j(topic = "USER-CONTROLLER")
 public class UserController {
 
     private final UserService userService;
@@ -98,6 +100,9 @@ public class UserController {
     @Operation(summary = "Update User", description = "API update User")
     @PutMapping("/update")
     public Map<String, Object> updateUser(@RequestBody UserUpdateRequest request){
+        log.info("Updating user: {}", request);
+
+        userService.update(request);
         Map<String, Object> result = new LinkedHashMap<>();
 
         result.put("status", HttpStatus.ACCEPTED.value());
