@@ -2,6 +2,7 @@ package vn.phucnghia.course_management_systems.controller.response;
 
 import lombok.Getter;
 import lombok.Setter;
+import vn.phucnghia.course_management_systems.common.Gender;
 
 import java.io.Serializable;
 import java.util.Date;
