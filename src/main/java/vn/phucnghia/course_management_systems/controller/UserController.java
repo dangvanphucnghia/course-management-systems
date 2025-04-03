@@ -130,6 +130,8 @@ public class UserController {
     @Operation(summary = "Disable User", description = "API delete User")
     @DeleteMapping("/delete/{userId}")
     public Map<String, Object> deleteUser(@PathVariable Long userId){
+        log.info("Deleting user: {}", userId);
+        userService.delete(userId);
         Map<String, Object> result = new LinkedHashMap<>();
 
         result.put("status", HttpStatus.RESET_CONTENT.value());
