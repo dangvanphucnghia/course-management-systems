@@ -28,13 +28,18 @@ public class UserController {
 
     @Operation(summary = "Get user list", description = "API retrieve user from db")
     @GetMapping("/list")
-    public UserPageResponse getList(@RequestParam(required = false) String keywword,
-                                    @RequestParam(required = false) String sort,
-                                    @RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "20") int size){
+    public Map<String, Object> getList(@RequestParam(required = false) String keyword,
+                                       @RequestParam(required = false) String sort,
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "20") int size){
         log.info("Get list user");
 
-        return userService.findAll(keywword,sort ,page ,size );
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("status", HttpStatus.OK.value());
+        result.put("message", "user list");
+        result.put("data", userService.findAll(keyword,sort ,page ,size ));
+
+        return result;
 
     }
 

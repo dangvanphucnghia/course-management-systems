@@ -43,9 +43,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserPageResponse findAll(String keyword, String sort, int page, int size) {
-        if(StringUtils.hasLength(keyword)){
-            //goi search method
-        }
+        log.info("Searching with keyword: {}", keyword);
+
 
         //sorting
         Sort.Order order = new Sort.Order(Sort.Direction.ASC,"id");
@@ -62,9 +61,23 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        Pageable pageable = PageRequest.of(page, size,Sort.by(order));
-        Page<UserEntity> userEntities = userRepository.findAll(pageable);
+        int pageNo = 0;
+        if(page > 0){
+            pageNo = page - 1;
+        }
 
+        Pageable pageable = PageRequest.of(page, size,Sort.by(order));
+        Page<UserEntity> entityPage = null;
+        if(StringUtils.hasLength(keyword)){
+            entityPage = userRepository.searchByKeyword(keyword,pageable);
+        }else {
+
+            entityPage = userRepository.findAll(pageable);
+        }
+        return getUserPageResponse(page, size, entityPage);
+    }
+
+    private static UserPageResponse getUserPageResponse(int page, int size, Page<UserEntity> userEntities) {
         List<UserResponse> userList = userEntities.stream().map(entity->UserResponse.builder()
                         .id(entity.getId())
                         .firstName(entity.getFirstName())
