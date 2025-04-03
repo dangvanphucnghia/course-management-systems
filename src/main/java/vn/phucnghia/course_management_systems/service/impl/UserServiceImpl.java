@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import vn.phucnghia.course_management_systems.common.UserStatus;
 import vn.phucnghia.course_management_systems.controller.request.UserCreationRequest;
+import vn.phucnghia.course_management_systems.controller.response.UserPageResponse;
 import vn.phucnghia.course_management_systems.controller.response.UserResponse;
 import vn.phucnghia.course_management_systems.exception.ResourceNotFoundException;
 import vn.phucnghia.course_management_systems.model.AddressEntity;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public List<UserResponse> findAll(String keyword, String sort, int page, int size) {
+    public UserPageResponse findAll(String keyword, String sort, int page, int size) {
         if(StringUtils.hasLength(keyword)){
             //goi search method
         }
@@ -64,8 +65,7 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = PageRequest.of(page, size,Sort.by(order));
         Page<UserEntity> userEntities = userRepository.findAll(pageable);
 
-//        List<UserResponse> userList =
-        return userEntities.stream().map(entity->UserResponse.builder()
+        List<UserResponse> userList = userEntities.stream().map(entity->UserResponse.builder()
                         .id(entity.getId())
                         .firstName(entity.getFirstName())
                         .lastName(entity.getLastName())
@@ -76,6 +76,13 @@ public class UserServiceImpl implements UserService {
                         .email(entity.getEmail())
                         .build())
                 .toList();
+        UserPageResponse userPageResponse = new UserPageResponse();
+        userPageResponse.setPageNumber(page);
+        userPageResponse.setPageSize(size);
+        userPageResponse.setTotalElements(userEntities.getTotalElements());
+        userPageResponse.setTotalPages(userEntities.getTotalPages());
+        userPageResponse.setUsers(userList);
+        return userPageResponse;
     }
 
     @Override

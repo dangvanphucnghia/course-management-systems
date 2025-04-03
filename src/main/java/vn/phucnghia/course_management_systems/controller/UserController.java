@@ -11,6 +11,7 @@ import vn.phucnghia.course_management_systems.common.Gender;
 import vn.phucnghia.course_management_systems.controller.request.UserChangPasswordRequest;
 import vn.phucnghia.course_management_systems.controller.request.UserCreationRequest;
 import vn.phucnghia.course_management_systems.controller.request.UserUpdateRequest;
+import vn.phucnghia.course_management_systems.controller.response.UserPageResponse;
 import vn.phucnghia.course_management_systems.controller.response.UserResponse;
 import vn.phucnghia.course_management_systems.service.UserService;
 
@@ -27,41 +28,13 @@ public class UserController {
 
     @Operation(summary = "Get user list", description = "API retrieve user from db")
     @GetMapping("/list")
-    public Map<String, Object> getList(@RequestParam(required = false) String keywword,
-                                       @RequestParam(required = false) String sort,
-                                       @RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "20") int size){
+    public UserPageResponse getList(@RequestParam(required = false) String keywword,
+                                    @RequestParam(required = false) String sort,
+                                    @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "20") int size){
         log.info("Get list user");
-        userService.findAll(keywword,sort ,page ,size );
-        UserResponse userResponse1 = new UserResponse();
 
-        userResponse1.setId(1l);
-        userResponse1.setFirstName("admin1");
-        userResponse1.setLastName("system1");
-        userResponse1.setUsername("admin1");
-        userResponse1.setGender(Gender.MALE);
-        userResponse1.setBirthday(new Date());
-        userResponse1.setPhone("0368285760");
-        userResponse1.setEmail("admin1@gmail.com");
-
-        UserResponse userResponse2 = new UserResponse();
-
-        userResponse2.setId(2l);
-        userResponse2.setFirstName("admin2");
-        userResponse2.setLastName("system2");
-        userResponse2.setUsername("admin2");
-        userResponse2.setGender(Gender.MALE);
-        userResponse2.setBirthday(new Date());
-        userResponse2.setPhone("0368285761");
-        userResponse2.setEmail("admin2@gmail.com");
-
-        List<UserResponse> userlink = List.of(userResponse1, userResponse2);
-
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("status", HttpStatus.OK.value());
-        result.put("message", "User Link");
-        result.put("data",userlink);
-        return result;
+        return userService.findAll(keywword,sort ,page ,size );
 
     }
 

@@ -5,6 +5,7 @@ package vn.phucnghia.course_management_systems.service;
 import vn.phucnghia.course_management_systems.controller.request.UserChangPasswordRequest;
 import vn.phucnghia.course_management_systems.controller.request.UserCreationRequest;
 import vn.phucnghia.course_management_systems.controller.request.UserUpdateRequest;
+import vn.phucnghia.course_management_systems.controller.response.UserPageResponse;
 import vn.phucnghia.course_management_systems.controller.response.UserResponse;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface UserService {
 
 
-    List<UserResponse> findAll(String keyword, String sort, int page, int size);
+    UserPageResponse findAll(String keyword, String sort, int page, int size);
 
     UserResponse findById(Long id);
 

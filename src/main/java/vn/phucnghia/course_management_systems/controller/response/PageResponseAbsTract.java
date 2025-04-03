@@ -1,0 +1,15 @@
+package vn.phucnghia.course_management_systems.controller.response;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
+
+@Getter
+@Setter
+public abstract class PageResponseAbsTract implements Serializable {
+    public int pageNumber;
+    public int pageSize;
+    public long totalPages;
+    public long totalElements;
+}
